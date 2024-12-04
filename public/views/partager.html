@@ -38,10 +38,10 @@
           <i class="fas fa-users"></i> <span>Espace Partagé</span>
         </h2>
         <div class="flex space-x-2">
-          <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
+          <button id="createFolder" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
             <i class="fas fa-folder-plus mr-2"></i> Créer un dossier
           </button>
-          <button class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition flex items-center">
+          <button id="createFile" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition flex items-center">
             <i class="fas fa-file-upload mr-2"></i> Créer un fichier
           </button>
         </div>
@@ -50,86 +50,21 @@
       <!-- Section des dossiers -->
       <section class="mb-12">
         <h3 class="text-xl font-bold mb-4">Dossiers</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
-            <div class="flex-shrink-0">
-              <i class="fas fa-folder text-purple-500 text-4xl"></i>
-            </div>
-            <div class="ml-4 flex-grow">
-              <h4 class="font-bold text-lg truncate">Photos Vacances</h4>
-            </div>
-            <div class="flex-shrink-0">
-              <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer"></i>
-            </div>
-          </div>
-          <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
-            <div class="flex-shrink-0">
-              <i class="fas fa-folder text-orange-500 text-4xl"></i>
-            </div>
-            <div class="ml-4 flex-grow">
-              <h4 class="font-bold text-lg truncate">Rapports Annuels</h4>
-            </div>
-            <div class="flex-shrink-0">
-              <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer"></i>
-            </div>
-          </div>
-          <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
-            <div class="flex-shrink-0">
-              <i class="fas fa-folder text-cyan-500 text-4xl"></i>
-            </div>
-            <div class="ml-4 flex-grow">
-              <h4 class="font-bold text-lg truncate">Collaborations</h4>
-            </div>
-            <div class="flex-shrink-0">
-              <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer"></i>
-            </div>
-          </div>
+        <div id="folderSection" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Les dossiers dynamiques seront ajoutés ici -->
         </div>
       </section>
 
       <!-- Section des fichiers -->
       <section>
         <h3 class="text-xl font-bold mb-4">Fichiers</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
-            <div class="flex-shrink-0">
-              <i class="fas fa-file-excel text-green-500 text-6xl"></i>
-            </div>
-            <div class="mt-4 text-center">
-              <h4 class="font-bold text-lg">Budget.xlsx</h4>
-              <p class="text-gray-500 text-sm">450 Ko</p>
-            </div>
-          </div>
-          <div class="flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
-            <div class="flex-shrink-0">
-              <i class="fas fa-file-powerpoint text-orange-500 text-6xl"></i>
-            </div>
-            <div class="mt-4 text-center">
-              <h4 class="font-bold text-lg">Présentation.pptx</h4>
-              <p class="text-gray-500 text-sm">1,8 Mo</p>
-            </div>
-          </div>
-          <div class="flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
-            <div class="flex-shrink-0">
-              <i class="fas fa-file-pdf text-red-500 text-6xl"></i>
-            </div>
-            <div class="mt-4 text-center">
-              <h4 class="font-bold text-lg">Guide.pdf</h4>
-              <p class="text-gray-500 text-sm">3,4 Mo</p>
-            </div>
-          </div>
-          <div class="flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
-            <div class="flex-shrink-0">
-              <i class="fas fa-file-code text-blue-500 text-6xl"></i>
-            </div>
-            <div class="mt-4 text-center">
-              <h4 class="font-bold text-lg">Code.js</h4>
-              <p class="text-gray-500 text-sm">120 Ko</p>
-            </div>
-          </div>
+        <div id="fileSection" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Les fichiers dynamiques seront ajoutés ici -->
         </div>
       </section>
     </main>
   </div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-md w-96">
+    <h2 class="text-2xl font-bold mb-6">Se connecter</h2>
+    <form action="/signin" method="POST">
+      <div class="mb-4">
+        <label for="text" class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" name="username" id="username" required class="w-full border rounded-md p-2 mt-1">
+      </div>
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+        <input type="password" name="password" id="password" required class="w-full border rounded-md p-2 mt-1">
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">Se connecter</button>
+    </form>
+  </div>
+</body>
+</html>
