@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace Personnel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/670c9b9132.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="flex h-screen">
+    <!-- Barre de navigation -->
+    <aside class="w-64 bg-blue-600 text-white flex flex-col">
+      <div class="py-6 px-4">
+        <h1 class="text-2xl font-bold"><i class="fas fa-cloud"></i> Mon Cloud</h1>
+      </div>
+      <nav class="flex-1 px-2 space-y-1">
+        <a href="/" class="flex items-center py-2 px-4 rounded-md hover:bg-blue-700 hover:text-white transition">
+          <i class="fas fa-home mr-2"></i> Dashboard
+        </a>
+        <a href="/personnel" class="flex items-center py-2 px-4 rounded-md hover:bg-blue-700 hover:text-white transition">
+          <i class="fas fa-user mr-2"></i> Espace Personnel
+        </a>
+        <a href="/partager" class="flex items-center py-2 px-4 rounded-md hover:bg-blue-700 hover:text-white transition">
+          <i class="fas fa-users mr-2"></i> Espace Partagé
+        </a>
+      </nav>
+      <footer class="py-4 px-4">
+        <p class="text-sm">© 2024 Mon Cloud</p>
+      </footer>
+    </aside>
+    <!-- Barre de navigation -->
+
+    <main class="flex-1 p-6">
+      <!-- Header principal -->
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-semibold flex items-center space-x-2">
+          <i class="fas fa-user"></i> <span>Espace Personnel</span>
+        </h2>
+        <div class="flex space-x-2">
+          <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
+            <i class="fas fa-folder-plus mr-2"></i> Créer un dossier
+          </button>
+          <button class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition flex items-center">
+            <i class="fas fa-file-upload mr-2"></i> Créer un fichier
+          </button>
+        </div>
+      </div>
+
+      <!-- Section des dossiers -->
+      <section class="mb-12">
+        <h3 class="text-xl font-bold mb-4">Dossiers</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Exemple de dossier 1 -->
+          <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
+            <div class="flex-shrink-0">
+              <i class="fas fa-folder text-green-500 text-4xl"></i>
+            </div>
+            <div class="ml-4 flex-grow">
+              <h4 class="font-bold text-lg truncate">Dossier 1</h4>
+            </div>
+            <div class="flex-shrink-0">
+              <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer"></i>
+            </div>
+          </div>
+          <!-- Exemple de dossier 2 -->
+          <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
+            <div class="flex-shrink-0">
+              <i class="fas fa-folder text-yellow-500 text-4xl"></i>
+            </div>
+            <div class="ml-4 flex-grow">
+              <h4 class="font-bold text-lg truncate">Projets Importants</h4>
+            </div>
+            <div class="flex-shrink-0">
+              <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer"></i>
+            </div>
+          </div>
+          <!-- Exemple de dossier 3 -->
+          <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
+            <div class="flex-shrink-0">
+              <i class="fas fa-folder text-blue-500 text-4xl"></i>
+            </div>
+            <div class="ml-4 flex-grow">
+              <h4 class="font-bold text-lg truncate">Projets Importants 2</h4>
+            </div>
+            <div class="flex-shrink-0">
+              <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer"></i>
+            </div>
+          </div>
+          <!-- Exemple de dossier 4 -->
+          <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
+            <div class="flex-shrink-0">
+              <i class="fas fa-folder text-red-500 text-4xl"></i>
+            </div>
+            <div class="ml-4 flex-grow">
+              <h4 class="font-bold text-lg truncate">Projets Importants 2</h4>
+            </div>
+            <div class="flex-shrink-0">
+              <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section des fichiers -->
+      <section>
+        <h3 class="text-xl font-bold mb-4">Fichiers</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Exemple de fichier PDF -->
+          <div class="flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
+            <div class="flex-shrink-0">
+              <i class="fas fa-file-pdf text-red-500 text-6xl"></i>
+            </div>
+            <div class="mt-4 text-center">
+              <h4 class="font-bold text-lg">Template.pdf</h4>
+              <p class="text-gray-500 text-sm">1,2 Mo</p>
+            </div>
+          </div>
+          <!-- Exemple de fichier Word -->
+          <div class="flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
+            <div class="flex-shrink-0">
+              <i class="fas fa-file-word text-blue-500 text-6xl"></i>
+            </div>
+            <div class="mt-4 text-center">
+              <h4 class="font-bold text-lg">Document.docx</h4>
+              <p class="text-gray-500 text-sm">1,2 Mo</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

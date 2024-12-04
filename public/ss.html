@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://kit.fontawesome.com/670c9b9132.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-bgLight text-gray-800">
+  <div class="flex h-screen">
+    <!-- Barre de navigation -->
+    <aside class="w-64 bg-primary text-white flex flex-col">
+        <div class="py-6 px-4">
+          <h1 class="text-2xl font-bold"><i class="fas fa-cloud"></i> Mon Cloud</h1>
+        </div>
+        <nav class="flex-1 px-2 space-y-1">
+          <a href="/" class="flex items-center py-2 px-4 rounded-md hover:bg-accent hover:text-white transition">
+            <i class="fas fa-home mr-2"></i> Dashboard
+          </a>
+          <a href="/espace-personnel" class="flex items-center py-2 px-4 rounded-md hover:bg-accent hover:text-white transition">
+            <i class="fas fa-user mr-2"></i> Espace Personnel
+          </a>
+          <a href="/espace-partager" class="flex items-center py-2 px-4 rounded-md hover:bg-accent hover:text-white transition">
+            <i class="fas fa-users mr-2"></i> Espace Partagé
+          </a>
+        </nav>
+        <footer class="py-4 px-4">
+          <p class="text-sm">© 2024 Mon Cloud</p>
+        </footer>
+    </aside>      
+
+    <!-- Contenu principal -->
+    <main class="flex-1 p-6">
+      <header class="flex justify-between items-center">
+        <h2 class="text-3xl font-semibold"><i class="fas fa-tachometer-alt"></i> Tableau de bord</h2>
+        <button class="bg-accent text-white px-4 py-2 rounded-md hover:bg-blue-600 transition flex items-center">
+          <i class="fas fa-upload mr-2"></i> Ajouter un fichier
+        </button>
+      </header>
+      <!-- Liste des fichiers -->
+      <section class="mt-8">
+        <h3 class="text-xl font-semibold mb-4"><i class="fas fa-folder"></i> Espace personnel</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dossier 1 -->
+          <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:shadow-lg transition relative">
+            <div class="flex-shrink-0">
+              <i class="fas fa-folder text-red-500 text-4xl"></i>
+            </div>
+            <div class="ml-4 flex-grow">
+              <h4 class="font-bold text-lg truncate">Dossier 1</h4>
+            </div>
+            <div class="relative">
+              <button class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <div class="menu-options hidden bg-white border rounded-lg shadow-lg absolute right-0 mt-2">
+                <ul class="py-2">
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Déplacer</li>
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Renommer</li>
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500">Supprimer</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <!-- End Dossier 1 -->
+        <!-- Dossier 2 -->
+        <div class="flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:shadow-lg transition relative">
+            <div class="flex-shrink-0">
+              <i class="fas fa-folder text-red-500 text-4xl"></i>
+            </div>
+            <div class="ml-4 flex-grow">
+              <h4 class="font-bold text-lg truncate">Dossier 2</h4>
+            </div>
+            <div class="relative">
+              <button class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <div class="menu-options hidden bg-white border rounded-lg shadow-lg absolute right-0 mt-2">
+                <ul class="py-2">
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Déplacer</li>
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Renommer</li>
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500">Supprimer</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <!-- End Dossier 2 -->          
+      </section>
+    </main>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

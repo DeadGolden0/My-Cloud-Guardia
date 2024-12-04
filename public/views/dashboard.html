@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="https://kit.fontawesome.com/670c9b9132.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-bgLight text-gray-800">
+  <div class="flex h-screen">
+    <!-- Barre de navigation -->
+    <aside class="w-64 bg-blue-600 text-white flex flex-col">
+      <div class="py-6 px-4">
+        <h1 class="text-2xl font-bold"><i class="fas fa-cloud"></i> Mon Cloud</h1>
+      </div>
+      <nav class="flex-1 px-2 space-y-1">
+        <a href="/" class="flex items-center py-2 px-4 rounded-md hover:bg-blue-700 hover:text-white transition">
+          <i class="fas fa-home mr-2"></i> Dashboard
+        </a>
+        <a href="/personnel" class="flex items-center py-2 px-4 rounded-md hover:bg-blue-700 hover:text-white transition">
+          <i class="fas fa-user mr-2"></i> Espace Personnel
+        </a>
+        <a href="/partager" class="flex items-center py-2 px-4 rounded-md hover:bg-blue-700 hover:text-white transition">
+          <i class="fas fa-users mr-2"></i> Espace Partagé
+        </a>
+      </nav>
+      <footer class="py-4 px-4">
+        <p class="text-sm">© 2024 Mon Cloud</p>
+      </footer>
+    </aside>
+    <!-- Barre de navigation --> 
+
+    <main class="flex-1 p-6">
+      <h2 class="text-3xl font-semibold"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+      <p>Bienvenue sur le tableau de bord.</p>
+    </main>
+  </div>
+</body>
+</html>
