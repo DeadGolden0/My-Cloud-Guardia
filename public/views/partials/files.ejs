@@ -1,0 +1,16 @@
+<% fileList.forEach(file => { %>
+    <div class="flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition">
+      <div class="flex-shrink-0">
+        <i class="<%= file.type === 'd' ? 'fas fa-folder text-yellow-500' : 'fas fa-file-alt text-blue-500' %> text-6xl"></i>
+      </div>
+      <div class="mt-4 text-center">
+        <h4 class="font-bold text-lg"><%= file.name %></h4>
+        <% if (file.size) { %>
+          <p class="text-gray-500 text-sm"><%= (file.size / 1024).toFixed(2) %> Ko</p>
+        <% } else { %>
+          <p class="text-gray-500 text-sm">Dossier</p>
+        <% } %>
+      </div>
+    </div>
+  <% }) %>
+  

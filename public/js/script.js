@@ -1,55 +1,248 @@
-// Gestion des dossiers et fichiers dynamiques
-document.getElementById('createFolder').addEventListener('click', () => {
-  const folderName = prompt('Nom du dossier :', 'Nouveau Dossier');
+// DEFAULT FUNCTIONS
+
+function openModal(modalId) {
+  document.getElementById(modalId).classList.remove('hidden');
+}
+
+// Fermer un modal
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.add('hidden');
+}
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// HeaderSection.ejs
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+// Gérer la création de dossier
+function handleCreateFolder(currentPath) {
+  const folderName = document.getElementById('folderName').value;
+
   if (folderName) {
-    const folderSection = document.getElementById('folderSection');
-    const folderDiv = document.createElement('div');
-    folderDiv.className = 'flex items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition';
-    folderDiv.innerHTML = `
-      <div class="flex-shrink-0">
-        <i class="fas fa-folder text-blue-500 text-4xl"></i>
-      </div>
-      <div class="ml-4 flex-grow">
-        <h4 class="font-bold text-lg truncate">${folderName}</h4>
-      </div>
-      <div class="flex-shrink-0">
-        <i class="fas fa-ellipsis-v text-gray-500 cursor-pointer"></i>
-      </div>
-    `;
-    folderSection.appendChild(folderDiv);
+    fetch('/create-folder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ folderName, currentPath }),
+    })
+      .then(response => {
+        if (response.ok) {
+          alert('Dossier créé avec succès!');
+          location.reload(); // Recharge la page pour afficher les modifications
+        } else {
+          alert('Erreur lors de la création du dossier.');
+        }
+      })
+      .catch(error => {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la création du dossier.');
+      })
+      .finally(() => {
+        closeModal('folderCreateModal');
+      });
   }
-});
+}
 
-document.getElementById('createFile').addEventListener('click', () => {
-  const fileName = prompt('Nom du fichier (avec extension) :', 'nouveauFichier.txt');
-  const fileSize = prompt('Taille du fichier :', '100 Ko');
-  if (fileName && fileSize) {
-    const fileSection = document.getElementById('fileSection');
-    const fileDiv = document.createElement('div');
-    fileDiv.className = 'flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition';
-    const fileIcon = getFileIcon(fileName);
-    fileDiv.innerHTML = `
-      <div class="flex-shrink-0">
-        <i class="fas ${fileIcon} text-blue-500 text-6xl"></i>
-      </div>
-      <div class="mt-4 text-center">
-        <h4 class="font-bold text-lg">${fileName}</h4>
-        <p class="text-gray-500 text-sm">${fileSize}</p>
-      </div>
-    `;
-    fileSection.appendChild(fileDiv);
-  }
-});
+// Gérer la création de fichier
+function handleCreateFile(currentPath) {
+  const fileName = document.getElementById('fileName').value;
 
-function getFileIcon(fileName) {
-  const extension = fileName.split('.').pop().toLowerCase();
-  switch (extension) {
-    case 'pdf': return 'fa-file-pdf text-red-500';
-    case 'doc': case 'docx': return 'fa-file-word text-blue-500';
-    case 'xls': case 'xlsx': return 'fa-file-excel text-green-500';
-    case 'ppt': case 'pptx': return 'fa-file-powerpoint text-orange-500';
-    case 'txt': return 'fa-file-alt text-gray-500';
-    case 'js': case 'css': case 'html': return 'fa-file-code text-purple-500';
-    default: return 'fa-file text-gray-500';
+  if (fileName) {
+    fetch('/create-file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fileName, currentPath }),
+    })
+      .then(response => {
+        if (response.ok) {
+          alert('Fichier créé avec succès!');
+          location.reload(); // Recharge la page pour afficher les modifications
+        } else {
+          alert('Erreur lors de la création du fichier.');
+        }
+      })
+      .catch(error => {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la création du fichier.');
+      })
+      .finally(() => {
+        closeModal('fileCreateModal');
+      });
   }
+}
+
+// Déclencher la fenêtre d'importation
+function triggerFileImport() {
+  document.getElementById('fileImportInput').click(); // Ouvre la fenêtre de sélection de fichiers
+}
+
+// Gérer les fichiers sélectionnés
+function handleFileImport(currentPath) {
+  const input = document.getElementById('fileImportInput');
+  const files = input.files; // Fichiers sélectionnés
+
+  if (files.length === 0) {
+    alert('Aucun fichier sélectionné.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('currentPath', currentPath);
+
+  for (const file of files) {
+    formData.append('files', file); // Ajoute chaque fichier au formulaire
+  }
+
+  // Envoi des fichiers au serveur
+  fetch('/import-files', {
+    method: 'POST',
+    body: formData,
+  })
+    .then(response => {
+      if (response.ok) {
+        alert('Fichiers importés avec succès!');
+        location.reload(); // Recharge la page pour afficher les modifications
+      } else {
+        alert('Erreur lors de l’importation des fichiers.');
+      }
+    })
+    .catch(error => {
+      console.error('Erreur:', error);
+      alert('Erreur lors de l’importation des fichiers.');
+    });
+}
+
+
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// folders.ejs
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+let folderToDelete = '';
+let folderToRename = '';
+
+
+// Ouvrir le modal pour renommer un dossier
+function openRenameModal(folderName) {
+  folderToRename = folderName;
+  document.getElementById('newFolderName').value = folderName;
+  openModal('renameModal');
+}
+
+// Renommer un dossier
+function renameFolder(currentPath) {
+  const newName = document.getElementById('newFolderName').value;
+
+  if (newName) {
+    fetch('/rename-folder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ oldName: folderToRename, newName, currentPath }),
+    })
+      .then(response => {
+        if (response.ok) {
+          alert(`Dossier renommé en "${newName}"`);
+          location.reload();
+        } else {
+          alert('Erreur lors du renommage.');
+        }
+      })
+      .catch(error => console.error('Erreur:', error));
+  }
+  closeModal('renameModal');
+}
+
+// Ouvrir le modal pour supprimer un dossier
+function openDeleteModal(folderName) {
+  folderToDelete = folderName;
+  document.getElementById('deleteConfirmationText').innerText = 
+    `Êtes-vous sûr de vouloir supprimer le dossier "${folderName}" ?`;
+  openModal('deleteModal');
+}
+
+// Supprimer un dossier
+function deleteFolder(currentPath) {
+  fetch('/delete-folder', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ folderName: folderToDelete, currentPath }),
+  })
+    .then(response => {
+      if (response.ok) {
+        alert(`Dossier "${folderToDelete}" supprimé.`);
+        location.reload();
+      } else {
+        alert('Erreur lors de la suppression.');
+      }
+    })
+    .catch(error => console.error('Erreur:', error));
+  closeModal('deleteModal');
+}
+
+// Toggle visibility of the submenu
+function toggleMenu(index) {
+  const submenu = document.getElementById(`submenu-${index}`);
+  submenu.classList.toggle('hidden');
+}
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// fileOnly.ejs
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+// Fonction pour afficher la modale avec le contenu du fichier
+let currentFileName = '';
+function viewFile(fileName, currentPath) {
+  currentFileName = fileName;
+  fetch(`/view-file`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ fileName, currentPath }),
+  })
+    .then(response => response.text())
+    .then(content => {
+      document.getElementById('fileViewModalTitle').innerText = fileName;
+      document.getElementById('fileViewModalContent').innerText = content;
+      document.getElementById('fileViewModal').classList.remove('hidden');
+    })
+    .catch(err => {
+      console.error('Erreur lors de la visualisation du fichier :', err);
+      alert('Impossible de charger le fichier.');
+    });
+}
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// partager.ejs
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+function downloadFile(currentPath) {
+  const fileName = currentFileName;
+  const downloadUrl = `/download-file?fileName=${encodeURIComponent(fileName)}&currentPath=${encodeURIComponent(currentPath)}`;
+
+  fetch(downloadUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Erreur lors du téléchargement du fichier.');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      // Crée un lien de téléchargement temporaire
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = fileName; // Définit le nom du fichier
+      // Ajoute un clic automatique pour ouvrir le sélecteur de chemin
+      document.body.appendChild(link);
+      link.click();
+      // Nettoie après le téléchargement
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(link.href);
+    })
+    .catch(error => {
+      console.error('Erreur:', error);
+      alert('Erreur lors du téléchargement du fichier.');
+    });
 }

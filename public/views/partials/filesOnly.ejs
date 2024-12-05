@@ -1,0 +1,14 @@
+<% fileList.forEach(file => { %>
+  <% if (file.type !== 'd') { %>
+    <div class="flex flex-col items-center bg-gray-50 border rounded-lg p-4 shadow hover:bg-gray-200 transition cursor-pointer"
+        onclick="viewFile('<%= file.name %>', '<%= currentPath %>')">
+      <div class="flex-shrink-0">
+        <i class="fas <%= getFileIcon(file.name) %> text-6xl"></i>
+      </div>
+      <div class="mt-4 text-center">
+        <h4 class="font-bold text-lg"><%= file.name %></h4>
+        <p class="text-gray-500 text-sm"><%= (file.size / 1024).toFixed(2) %> Ko</p>
+      </div>
+    </div>
+  <% } %>
+<% }) %>
