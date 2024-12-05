@@ -6,7 +6,6 @@ const authRoutes = require('./routes/authRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 
 const app = express();
-const PORT = 5000;
 
 // Configuration du moteur de vue
 app.set('view engine', 'ejs');
@@ -27,6 +26,6 @@ app.use('/', authRoutes);
 app.use('/', fileRoutes);
 
 // Démarrage du serveur
-app.listen(PORT, () => {
-  console.log(`Serveur lancé sur http://localhost:${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Serveur lancé sur http://localhost:${process.env.PORT}`);
 });

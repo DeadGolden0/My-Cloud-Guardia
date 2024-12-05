@@ -1,6 +1,7 @@
 const SFTPClient = require('ssh2-sftp-client');
 const path = require('path');
 const fs = require('fs');
+const { CryptFile } = require('./remoteController');
 
 // Fonction utilitaire pour valider les chemins et noms
 const validatePath = (path) => {
@@ -66,7 +67,11 @@ async function createFile(req, res) {
   const client = await connectSFTP(req);
   try {
     const filePath = path.posix.join(basePath, currentPath || '', fileName);
-    await client.put(Buffer.from(''), filePath); // Crée un fichier vide
+    //await client.put(Buffer.from(''), filePath);
+    await client.put(Buffer.from(''), "/secure/tmp/" + fileName); // Création du fichier dans le dossier temporaire
+
+    await CryptFile(fileName, req.session.password, req.session.username); // Cryptage du fichier
+
     res.redirect(req.headers.referer || '/'); // Redirige vers la page actuelle
   } catch (err) {
     console.error('Erreur lors de la création du fichier :', err.message);
@@ -180,13 +185,17 @@ async function importFiles(req, res) {
       return res.status(400).send('Aucun fichier reçu.');
     }
 
-    const uploadPath = path.posix.join(basePath, currentPath || '');
+    //const uploadPath = path.posix.join(basePath, currentPath || '');
+    const uploadPath = "/secure/tmp"; // Importation des fichiers dans le dossier temporaire
 
     for (const file of req.files) {
       const fileName = path.basename(file.originalname);
       const remotePath = path.posix.join(uploadPath, fileName);
 
       await client.put(file.path, remotePath);
+      
+      await CryptFile(fileName, req.session.password, req.session.username);
+
       fs.unlinkSync(file.path);
     }
 
