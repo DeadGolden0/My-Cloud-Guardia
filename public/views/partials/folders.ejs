@@ -8,7 +8,9 @@
     <div class="ml-4 flex-grow">
       <% if (file.type === 'd') { %>
         <!-- Lien vers le sous-dossier -->
-        <a href="/partager/<%= currentPath ? currentPath + '/' : '' %><%= encodeURIComponent(file.name) %>/" 
+        <% const basePath = currentPath.startsWith('partager') ? '/partager' : '/personnel'; %>
+
+        <a href="<%= basePath %>/<%= currentPath ? currentPath + '/' : '' %><%= encodeURIComponent(file.name) %>/"  
            class="font-bold text-lg truncate hover:underline">
           <%= file.name %>
         </a>
@@ -44,7 +46,7 @@
       <label for="newFolderName" class="block text-sm font-medium text-gray-700">Nouveau nom</label>
       <input type="text" id="newFolderName" class="w-full border rounded-md p-2 mt-1">
       <button class="mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-              onclick="renameFolder('<%= currentPath %>')">Renommer</button>
+              onclick="renameFolder('<%= basePath %>', '<%= currentPath %>')">Renommer</button>
     </div>
   </div>
 </div>
@@ -59,7 +61,7 @@
     <p id="deleteConfirmationText" class="text-gray-700 mb-4"></p>
     <div class="flex space-x-4">
       <button class="w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
-              onclick="deleteFolder('<%= currentPath %>')">Supprimer</button>
+              onclick="deleteFolder('<%= basePath %>', '<%= currentPath %>')">Supprimer</button>
       <button class="w-full bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition"
               onclick="closeModal('deleteModal')">Annuler</button>
     </div>

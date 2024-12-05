@@ -14,14 +14,15 @@ function closeModal(modalId) {
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 // Gérer la création de dossier
-function handleCreateFolder(currentPath) {
+function handleCreateFolder(basePath, currentPath, event) {
+  event.preventDefault();
   const folderName = document.getElementById('folderName').value;
 
   if (folderName) {
     fetch('/create-folder', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ folderName, currentPath }),
+      body: JSON.stringify({ folderName, currentPath, basePath }),
     })
       .then(response => {
         if (response.ok) {
@@ -42,14 +43,14 @@ function handleCreateFolder(currentPath) {
 }
 
 // Gérer la création de fichier
-function handleCreateFile(currentPath) {
+function handleCreateFile(basePath, currentPath) {
   const fileName = document.getElementById('fileName').value;
 
   if (fileName) {
     fetch('/create-file', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fileName, currentPath }),
+      body: JSON.stringify({ fileName, currentPath, basePath }),
     })
       .then(response => {
         if (response.ok) {
@@ -75,7 +76,7 @@ function triggerFileImport() {
 }
 
 // Gérer les fichiers sélectionnés
-function handleFileImport(currentPath) {
+function handleFileImport(basePath, currentPath) {
   const input = document.getElementById('fileImportInput');
   const files = input.files; // Fichiers sélectionnés
 
@@ -86,6 +87,7 @@ function handleFileImport(currentPath) {
 
   const formData = new FormData();
   formData.append('currentPath', currentPath);
+  formData.append('basePath', basePath);
 
   for (const file of files) {
     formData.append('files', file); // Ajoute chaque fichier au formulaire
@@ -128,7 +130,7 @@ function openRenameModal(folderName) {
 }
 
 // Renommer un dossier
-function renameFolder(currentPath) {
+function renameFolder(basePath, currentPath) {
   const newName = document.getElementById('newFolderName').value;
 
   if (newName) {
@@ -137,7 +139,7 @@ function renameFolder(currentPath) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ oldName: folderToRename, newName, currentPath }),
+      body: JSON.stringify({ oldName: folderToRename, newName, currentPath, basePath }),
     })
       .then(response => {
         if (response.ok) {
@@ -161,13 +163,13 @@ function openDeleteModal(folderName) {
 }
 
 // Supprimer un dossier
-function deleteFolder(currentPath) {
+function deleteFolder(basePath, currentPath) {
   fetch('/delete-folder', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ folderName: folderToDelete, currentPath }),
+    body: JSON.stringify({ folderName: folderToDelete, currentPath, basePath }),
   })
     .then(response => {
       if (response.ok) {
@@ -193,14 +195,14 @@ function toggleMenu(index) {
 
 // Fonction pour afficher la modale avec le contenu du fichier
 let currentFileName = '';
-function viewFile(fileName, currentPath) {
+function viewFile(fileName, basePath, currentPath) {
   currentFileName = fileName;
   fetch(`/view-file`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ fileName, currentPath }),
+    body: JSON.stringify({ fileName, currentPath, basePath }),
   })
     .then(response => response.text())
     .then(content => {
@@ -218,9 +220,17 @@ function viewFile(fileName, currentPath) {
 // partager.ejs
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-function downloadFile(currentPath) {
+function downloadFile(basePath, currentPath) {
   const fileName = currentFileName;
-  const downloadUrl = `/download-file?fileName=${encodeURIComponent(fileName)}&currentPath=${encodeURIComponent(currentPath)}`;
+  console.log('Téléchargement du fichier:', fileName);
+  console.log('BasePath:', basePath);
+  console.log('CurrentPath:', currentPath);
+  if (!basePath || !currentPath) {
+    console.error('BasePath ou CurrentPath non défini.');
+    alert('Impossible de déterminer le chemin du fichier.');
+    return;
+  }
+  const downloadUrl = `/download-file?fileName=${encodeURIComponent(fileName)}&basePath=${encodeURIComponent(basePath)}&currentPath=${encodeURIComponent(currentPath)}`;
 
   fetch(downloadUrl)
     .then(response => {

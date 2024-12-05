@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const multer = require('multer');
 const { listerFichiers, createFolder, createFile, deleteFolder, renameFolder, viewFile, downloadFile, importFiles, getFileIcon } = require('../controllers/fileController');
@@ -11,8 +12,8 @@ router.get('/partager/*', async (req, res) => {
     return res.redirect('/signin');
   }
 
-  const relativePath = req.params[0] || ''; // Chemin depuis /partager
-  const basePath = `/partager/`; // Chemin racine pour la route partager
+  const relativePath = req.params[0] || '/'; // Chemin depuis /partager
+  const basePath = `/public/`; // Chemin racine pour la route partager
 
   try {
     const fileList = await listerFichiers(req, res, basePath, relativePath); // Fournit le chemin relatif
@@ -34,7 +35,7 @@ router.get('/personnel/*', async (req, res) => {
     return res.redirect('/signin');
   }
 
-  const relativePath = req.params[0] || ''; // Chemin depuis /personnel
+  const relativePath = req.params[0] || '/'; // Chemin depuis /personnel
   const basePath = `/secure/${req.session.username}`; // Chemin racine pour la route personnel
 
   try {
@@ -43,6 +44,7 @@ router.get('/personnel/*', async (req, res) => {
       title: `Espace Personnel - ${relativePath || '/'}`,
       fileList,
       currentPath: relativePath,
+      basePath: basePath,
       getFileIcon,
     });
   } catch (err) {

@@ -35,7 +35,7 @@
       <h3 class="text-lg font-bold">Créer un dossier</h3>
       <button class="text-gray-500 hover:text-gray-700" onclick="closeModal('folderCreateModal')">✖</button>
     </div>
-    <form id="folderForm" onsubmit="handleCreateFolder('<%= currentPath %>', event)">
+    <form id="folderForm" onsubmit="handleCreateFolder('<%= basePath %>', '<%= currentPath %>', event)">
       <div class="mb-4">
         <label for="folderName" class="block text-sm font-medium text-gray-700">Nom du dossier</label>
         <input type="text" id="folderName" name="folderName" class="w-full border rounded-md p-2 mt-1" required>
@@ -54,7 +54,7 @@
       <h3 class="text-lg font-bold">Créer un fichier</h3>
       <button class="text-gray-500 hover:text-gray-700" onclick="closeModal('fileCreateModal')">✖</button>
     </div>
-    <form id="fileForm" onsubmit="handleCreateFile('<%= currentPath %>', event)">
+    <form id="fileForm" onsubmit="handleCreateFile('<%= basePath %>', '<%= currentPath %>', event)">
       <div class="mb-4">
         <label for="fileName" class="block text-sm font-medium text-gray-700">Nom du fichier</label>
         <input type="text" id="fileName" name="fileName" class="w-full border rounded-md p-2 mt-1" required>
@@ -73,11 +73,11 @@
       <h3 class="text-lg font-bold">Importer un fichier ou un dossier</h3>
       <button class="text-gray-500 hover:text-gray-700" onclick="closeModal('importModal')">✖</button>
     </div>
-    <form id="importForm" onsubmit="handleImport('<%= currentPath %>', event)">
+    <form id="importForm" onsubmit="handleImport('<%= basePath %>', '<%= currentPath %>', event)">
       <!-- Importer un fichier spécifique -->
       <div class="mb-4">
         <label for="importFile" class="block text-sm font-medium text-gray-700">Sélectionnez des fichiers</label>
-        <input id="fileImportInput" type="file" class="hidden" onchange="handleFileImport('<%= currentPath %>')">
+        <input id="fileImportInput" type="file" class="hidden" onchange="handleFileImport('<%= basePath %>', '<%= currentPath %>')">
       </div>
 
       <button type="submit" class="w-full bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition">

@@ -78,33 +78,32 @@ async function createFile(req, res) {
 
 // Télécharger un fichier
 async function downloadFile(req, res) {
-  const { fileName, currentPath, basePath } = req.query;
-  const client = await connectSFTP(req);
+  const { fileName, currentPath, basePath } = req.query; // Ajout de basePath ici
+  if (!fileName || !currentPath || !basePath) {
+    return res.status(400).send('Paramètres manquants.');
+  }
 
+  const client = await connectSFTP(req);
   try {
-    const remotePath = path.posix.join(basePath, currentPath || '', fileName);
+    const remotePath = path.posix.join(basePath, currentPath, fileName);
     const localTempPath = path.join(__dirname, 'temp', fileName);
 
-    // Assurez-vous que le répertoire temporaire existe
     if (!fs.existsSync(path.dirname(localTempPath))) {
       fs.mkdirSync(path.dirname(localTempPath), { recursive: true });
     }
 
-    // Télécharger le fichier
     await client.fastGet(remotePath, localTempPath);
-
-    // Envoyer le fichier au client
-    res.download(localTempPath, fileName, (err) => {
+    res.download(localTempPath, fileName, err => {
       if (err) {
         console.error('Erreur lors du téléchargement du fichier :', err.message);
-        res.status(500).send('Erreur lors du téléchargement du fichier.');
+        res.status(500).send('Erreur lors du téléchargement.');
       } else {
-        fs.unlinkSync(localTempPath); // Supprimer le fichier temporaire
+        fs.unlinkSync(localTempPath); // Nettoyage du fichier temporaire
       }
     });
   } catch (err) {
     console.error('Erreur lors du téléchargement du fichier :', err.message);
-    res.status(500).send('Erreur lors du téléchargement du fichier.');
+    res.status(500).send('Erreur lors du téléchargement.');
   } finally {
     client.end();
   }
