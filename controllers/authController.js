@@ -12,7 +12,7 @@ async function checkLogin(req, res) {
   
       req.session.username = username;
       req.session.password = password;
-      res.redirect('/partager/');
+      res.redirect('/personnel/');
     } catch (err) {
       console.error('Erreur de connexion SFTP :', err.message);
       res.render('signin', { 

@@ -5,17 +5,42 @@ const { listerFichiers, createFolder, createFile, deleteFolder, renameFolder, vi
 const router = express.Router();
 const upload = multer({ dest: 'temp/' });
 
-// Route pour afficher la liste des fichiers et dossiers
+// Route pour afficher les fichiers et dossiers partagés
 router.get('/partager/*', async (req, res) => {
   if (!req.session.username || !req.session.password) {
     return res.redirect('/signin');
   }
 
-  const relativePath = req.params[0] || ''; // Capture le chemin depuis /partager
+  const relativePath = req.params[0] || ''; // Chemin depuis /partager
+  const basePath = `/partager/`; // Chemin racine pour la route partager
+
   try {
-    const fileList = await listerFichiers(req, res, relativePath); // Fournit le chemin relatif
+    const fileList = await listerFichiers(req, res, basePath, relativePath); // Fournit le chemin relatif
     res.render('partager', {
       title: `Espace Partagé - ${relativePath || '/'}`,
+      fileList,
+      currentPath: relativePath,
+      getFileIcon,
+    });
+  } catch (err) {
+    console.error('Erreur lors du chargement des fichiers :', err.message);
+    res.status(500).send('Erreur lors du chargement des fichiers.');
+  }
+});
+
+// Route pour afficher les fichiers et dossiers personnels
+router.get('/personnel/*', async (req, res) => {
+  if (!req.session.username || !req.session.password) {
+    return res.redirect('/signin');
+  }
+
+  const relativePath = req.params[0] || ''; // Chemin depuis /personnel
+  const basePath = `/secure/${req.session.username}`; // Chemin racine pour la route personnel
+
+  try {
+    const fileList = await listerFichiers(req, res, basePath, relativePath); // Fournit le chemin relatif
+    res.render('personnel', {
+      title: `Espace Personnel - ${relativePath || '/'}`,
       fileList,
       currentPath: relativePath,
       getFileIcon,

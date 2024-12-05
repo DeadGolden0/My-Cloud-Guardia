@@ -21,14 +21,15 @@ async function connectSFTP(req) {
 }
 
 // Lister les fichiers/dossiers
-async function listerFichiers(req, res, relativePath = '') {
+async function listerFichiers(req, res, basePath, relativePath = '') {
   const client = await connectSFTP(req);
   try {
-    const absolutePath = `/home/${req.session.username}/${relativePath || ''}`;
+    const absolutePath = path.posix.join(basePath, relativePath || '');
     const fileList = await client.list(absolutePath);
-    return fileList.length > 0 ? fileList : [];
+    const filteredList = fileList.filter(file => file.name !== 'temp');
+    return filteredList.length > 0 ? filteredList : [];
   } catch (err) {
-    throw new Error(err.message);
+    throw new Error(`Erreur lors de la liste des fichiers : ${err.message}`);
   } finally {
     client.end();
   }
@@ -36,16 +37,16 @@ async function listerFichiers(req, res, relativePath = '') {
 
 // Créer un dossier
 async function createFolder(req, res) {
-  const { folderName, currentPath } = req.body;
+  const { folderName, currentPath, basePath } = req.body;
   if (!validatePath(folderName) || !validatePath(currentPath)) {
     return res.status(400).send('Nom ou chemin invalide.');
   }
 
   const client = await connectSFTP(req);
   try {
-    const absolutePath = `/home/${req.session.username}/${currentPath || ''}/${folderName}`;
+    const absolutePath = path.posix.join(basePath, currentPath || '', folderName);
     await client.mkdir(absolutePath, true);
-    res.redirect(`/partager/${currentPath || ''}`);
+    res.redirect(req.headers.referer || '/');
   } catch (err) {
     console.error('Erreur lors de la création du dossier :', err.message);
     res.status(500).send('Erreur lors de la création du dossier.');
@@ -56,80 +57,71 @@ async function createFolder(req, res) {
 
 // Créer un fichier
 async function createFile(req, res) {
-    const { fileName, currentPath } = req.body;
-  
-    // Validation des noms
-    if (!validatePath(fileName) || !validatePath(currentPath)) {
-      return res.status(400).send('Nom de fichier ou chemin invalide.');
-    }
-  
-    const client = await connectSFTP(req);
-    try {
-      const filePath = `/home/${req.session.username}/${currentPath || ''}/${fileName}`;
-      await client.put(Buffer.from(''), filePath); // Crée un fichier vide
-      res.redirect(`/partager/${currentPath || ''}`); // Redirige vers le chemin actuel
-    } catch (err) {
-      console.error('Erreur lors de la création du fichier :', err.message);
-      res.status(500).send('Erreur lors de la création du fichier.');
-    } finally {
-      client.end();
-    }
+  const { fileName, currentPath, basePath } = req.body;
+
+  if (!validatePath(fileName) || !validatePath(currentPath)) {
+    return res.status(400).send('Nom ou chemin invalide.');
+  }
+
+  const client = await connectSFTP(req);
+  try {
+    const filePath = path.posix.join(basePath, currentPath || '', fileName);
+    await client.put(Buffer.from(''), filePath); // Crée un fichier vide
+    res.redirect(req.headers.referer || '/'); // Redirige vers la page actuelle
+  } catch (err) {
+    console.error('Erreur lors de la création du fichier :', err.message);
+    res.status(500).send('Erreur lors de la création du fichier.');
+  } finally {
+    client.end();
+  }
 }
 
+// Télécharger un fichier
 async function downloadFile(req, res) {
-  const { fileName, currentPath } = req.query; // Récupération des paramètres
-  const client = new SFTPClient();
+  const { fileName, currentPath, basePath } = req.query;
+  const client = await connectSFTP(req);
 
   try {
-    await client.connect({
-      host: process.env.SFTP_HOST,
-      port: parseInt(process.env.SFTP_PORT, 10),
-      username: req.session.username,
-      password: req.session.password,
-    });
-
-    const remotePath = `/home/${req.session.username}/${currentPath}/${fileName}`;
+    const remotePath = path.posix.join(basePath, currentPath || '', fileName);
     const localTempPath = path.join(__dirname, 'temp', fileName);
 
     // Assurez-vous que le répertoire temporaire existe
-    const tempDir = path.join(__dirname, 'temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
+    if (!fs.existsSync(path.dirname(localTempPath))) {
+      fs.mkdirSync(path.dirname(localTempPath), { recursive: true });
     }
 
-    // Téléchargement du fichier dans le répertoire temporaire
+    // Télécharger le fichier
     await client.fastGet(remotePath, localTempPath);
-    await client.end();
 
-    // Envoi du fichier au client pour téléchargement
+    // Envoyer le fichier au client
     res.download(localTempPath, fileName, (err) => {
       if (err) {
         console.error('Erreur lors du téléchargement du fichier :', err.message);
         res.status(500).send('Erreur lors du téléchargement du fichier.');
       } else {
-        // Supprimez le fichier temporaire après téléchargement
-        fs.unlinkSync(localTempPath);
+        fs.unlinkSync(localTempPath); // Supprimer le fichier temporaire
       }
     });
   } catch (err) {
     console.error('Erreur lors du téléchargement du fichier :', err.message);
     res.status(500).send('Erreur lors du téléchargement du fichier.');
+  } finally {
+    client.end();
   }
 }
-  
 
 // Supprimer un dossier
 async function deleteFolder(req, res) {
-  const { folderName, currentPath } = req.body;
+  const { folderName, currentPath, basePath } = req.body;
   if (!validatePath(folderName) || !validatePath(currentPath)) {
     return res.status(400).send('Nom ou chemin invalide.');
   }
 
   const client = await connectSFTP(req);
   try {
-    const folderPath = `/home/${req.session.username}/${currentPath || ''}/${folderName}`;
+    const folderPath = path.posix.join(basePath, currentPath || '', folderName);
     await client.rmdir(folderPath, true);
-    res.redirect(`/partager/${currentPath || ''}`);
+    res.redirect(req.headers.referer || '/');
   } catch (err) {
     console.error('Erreur lors de la suppression :', err.message);
     res.status(500).send('Erreur lors de la suppression du dossier.');
@@ -140,17 +132,17 @@ async function deleteFolder(req, res) {
 
 // Renommer un dossier
 async function renameFolder(req, res) {
-  const { oldName, newName, currentPath } = req.body;
+  const { oldName, newName, currentPath, basePath } = req.body;
   if (!validatePath(oldName) || !validatePath(newName) || !validatePath(currentPath)) {
     return res.status(400).send('Nom ou chemin invalide.');
   }
 
   const client = await connectSFTP(req);
   try {
-    const oldPath = `/home/${req.session.username}/${currentPath || ''}/${oldName}`;
-    const newPath = `/home/${req.session.username}/${currentPath || ''}/${newName}`;
+    const oldPath = path.posix.join(basePath, currentPath || '', oldName);
+    const newPath = path.posix.join(basePath, currentPath || '', newName);
     await client.rename(oldPath, newPath);
-    res.redirect(`/partager/${currentPath || ''}`);
+    res.redirect(req.headers.referer || '/');
   } catch (err) {
     console.error('Erreur lors du renommage :', err.message);
     res.status(500).send('Erreur lors du renommage du dossier.');
@@ -161,14 +153,14 @@ async function renameFolder(req, res) {
 
 // Visualiser un fichier
 async function viewFile(req, res) {
-  const { fileName, currentPath } = req.body;
+  const { fileName, currentPath, basePath } = req.body;
   if (!validatePath(fileName) || !validatePath(currentPath)) {
     return res.status(400).send('Nom ou chemin invalide.');
   }
 
   const client = await connectSFTP(req);
   try {
-    const remotePath = `/home/${req.session.username}/${currentPath || ''}/${fileName}`;
+    const remotePath = path.posix.join(basePath, currentPath || '', fileName);
     const fileContent = await client.get(remotePath);
     res.send(fileContent.toString());
   } catch (err) {
@@ -181,42 +173,34 @@ async function viewFile(req, res) {
 
 // Importer des fichiers
 async function importFiles(req, res) {
-  const { currentPath } = req.body;
-  const client = new SFTPClient();
-  const uploadPath = `/home/${req.session.username}/${currentPath}`; // Destination sur le serveur
+  const { currentPath, basePath } = req.body;
+  const client = await connectSFTP(req);
 
   try {
     if (!req.files || req.files.length === 0) {
-      return res.status(400).send('Aucun fichier reçu');
+      return res.status(400).send('Aucun fichier reçu.');
     }
 
-    // Connexion au serveur SFTP
-    await client.connect({
-      host: process.env.SFTP_HOST,
-      port: parseInt(process.env.SFTP_PORT, 10),
-      username: req.session.username,
-      password: req.session.password,
-    });
+    const uploadPath = path.posix.join(basePath, currentPath || '');
 
     for (const file of req.files) {
-      const fileName = path.basename(file.originalname); // Récupère uniquement le nom du fichier
-      const remotePath = path.posix.join(uploadPath, fileName); // Chemin sur le serveur SFTP
+      const fileName = path.basename(file.originalname);
+      const remotePath = path.posix.join(uploadPath, fileName);
 
-      // Téléchargez le fichier temporaire sur le serveur SFTP
       await client.put(file.path, remotePath);
-
-      // Supprimez le fichier temporaire local
       fs.unlinkSync(file.path);
     }
 
-    await client.end(); // Fermez la connexion SFTP
-    res.status(200).send('Fichiers importés avec succès');
+    res.status(200).send('Fichiers importés avec succès.');
   } catch (err) {
     console.error('Erreur lors de l’importation des fichiers :', err.message);
     res.status(500).send('Erreur lors de l’importation des fichiers.');
+  } finally {
+    client.end();
   }
 }
 
+// Icône des fichiers
 function getFileIcon(fileName) {
   const extension = fileName.split('.').pop().toLowerCase();
   switch (extension) {
@@ -231,5 +215,14 @@ function getFileIcon(fileName) {
   }
 }
 
-
-module.exports = { listerFichiers, createFolder, createFile, deleteFolder, renameFolder, viewFile, downloadFile, importFiles, getFileIcon };
+module.exports = {
+  listerFichiers,
+  createFolder,
+  createFile,
+  deleteFolder,
+  renameFolder,
+  viewFile,
+  downloadFile,
+  importFiles,
+  getFileIcon,
+};
