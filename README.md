@@ -17,7 +17,7 @@ Guardia Projet3 is a system for securely managing files, including encryption an
 git clone https://github.com/your-repo/guardia-projet3.git
 cd guardia-projet3
 ```
-
+ 
 2. Install dependencies:
 
 ```bash
