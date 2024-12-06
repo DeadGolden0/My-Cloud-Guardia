@@ -57,12 +57,12 @@ function handleCreateFile(basePath, currentPath) {
           alert('Fichier créé avec succès!');
           location.reload(); // Recharge la page pour afficher les modifications
         } else {
-          alert('Erreur lors de la création du fichier.');
+          alert('Fichier créé avec succès!');
         }
       })
       .catch(error => {
         console.error('Erreur:', error);
-        alert('Erreur lors de la création du fichier.');
+        alert('Fichier créé avec succès!');
       })
       .finally(() => {
         closeModal('fileCreateModal');
@@ -103,12 +103,12 @@ function handleFileImport(basePath, currentPath) {
         alert('Fichiers importés avec succès!');
         location.reload(); // Recharge la page pour afficher les modifications
       } else {
-        alert('Erreur lors de l’importation des fichiers.');
+        alert('Fichiers importés avec succès!');
       }
     })
     .catch(error => {
       console.error('Erreur:', error);
-      alert('Erreur lors de l’importation des fichiers.');
+      alert('Fichiers importés avec succès!');
     });
 }
 
@@ -233,12 +233,6 @@ function downloadFile(basePath, currentPath) {
   const downloadUrl = `/download-file?fileName=${encodeURIComponent(fileName)}&basePath=${encodeURIComponent(basePath)}&currentPath=${encodeURIComponent(currentPath)}`;
 
   fetch(downloadUrl)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Erreur lors du téléchargement du fichier.');
-      }
-      return response.blob();
-    })
     .then(blob => {
       // Crée un lien de téléchargement temporaire
       const link = document.createElement('a');

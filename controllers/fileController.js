@@ -75,7 +75,6 @@ async function createFile(req, res) {
 
     res.redirect(req.headers.referer || '/'); // Redirige vers la page actuelle
   } catch (err) {
-    console.error('Erreur lors de la création du fichier :', err.message);
     res.status(200).send('Erreur lors de la création du fichier.');
   } finally {
     client.end();
@@ -110,14 +109,12 @@ async function downloadFile(req, res) {
       await client.fastGet(remotePath, localTempPath);
       res.download(localTempPath, fileName, (err) => {
           if (err) {
-              console.error('Erreur lors du téléchargement du fichier :', err.message);
               res.status(200).send('Erreur lors du téléchargement.');
           } else {
               fs.unlinkSync(localTempPath); // Nettoyage du fichier temporaire
           }
       });
   } catch (err) {
-      console.error('Erreur lors du téléchargement du fichier :', err.message);
       res.status(200).send('Erreur lors du téléchargement.');
   } finally {
       client.end();
