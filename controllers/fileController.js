@@ -94,9 +94,8 @@ async function downloadFile(req, res) {
       try {
           const destinationPath = path.posix.join(basePath, currentPath || '');
           await DecryptFile(fileName, req.session.password, req.session.username, destinationPath);
-          console.log(`Fichier ${fileName} décrypté avec succès.`);
       } catch (decryptErr) {
-          console.error(`Erreur lors du décryptage du fichier ${fileName} :`, decryptErr.message);
+          console.error(`Décryptage du fichier ${fileName}`);
       }
 
       const remotePath = path.posix.join("/secure/tmp/", fileName); // Téléchargement du fichier dans le dossier temporaire
