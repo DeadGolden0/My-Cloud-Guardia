@@ -1,6 +1,9 @@
-## 🌐 Guardia Projet3
+## 🌐 My Cloud Guardia
 
-Guardia Projet3 is a system for securely managing files, including encryption and decryption operations, designed to enhance data confidentiality and integrity. The project uses a combination of SSH, Docker, and a secure backend for seamless file handling.
+My Cloud Guardia is a system for securely managing files, including encryption and decryption operations, designed to enhance data confidentiality and integrity. The project uses a combination of SSH, Docker, and a secure backend for seamless file handling.
+
+> [!NOTE]
+> This project was developed by Group 5 as part of Project 3: "Guidance in the Development of Encryption Algorithms."
 
 ## 📋 Prerequisites
 
@@ -42,8 +45,6 @@ docker run -d -p 5000:5000 --name guardia guardia-projet3
 Create a .env file in the root directory:
 
 ```bash
-env
-Copier le code
 SFTP_HOST=example.com
 SFTP_PORT=22
 SSH_USER=your-username
