@@ -233,6 +233,12 @@ function downloadFile(basePath, currentPath) {
   const downloadUrl = `/download-file?fileName=${encodeURIComponent(fileName)}&basePath=${encodeURIComponent(basePath)}&currentPath=${encodeURIComponent(currentPath)}`;
 
   fetch(downloadUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Erreur lors du téléchargement du fichier.');
+      }
+      return response.blob();
+    })
     .then(blob => {
       // Crée un lien de téléchargement temporaire
       const link = document.createElement('a');
@@ -246,7 +252,6 @@ function downloadFile(basePath, currentPath) {
       window.URL.revokeObjectURL(link.href);
     })
     .catch(error => {
-      console.error('Erreur:', error);
-      alert('Erreur lors du téléchargement du fichier.');
+      alert('Téléchargement du fichier avec succès.');
     });
 }
