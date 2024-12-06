@@ -13,7 +13,7 @@ router.get('/partager/*', async (req, res) => {
   }
 
   const relativePath = req.params[0] || '/'; // Chemin depuis /partager
-  const basePath = `/public/`; // Chemin racine pour la route partager
+  const basePath = `/secure/public/`; // Chemin racine pour la route partager
 
   try {
     const fileList = await listerFichiers(req, res, basePath, relativePath); // Fournit le chemin relatif
