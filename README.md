@@ -17,8 +17,8 @@ My Cloud Guardia is a system for securely managing files, including encryption a
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-repo/guardia-projet3.git
-cd guardia-projet3
+git clone https://github.com/DeadGolden0/My-Cloud-Guardia.git
+cd My-Cloud-Guardia
 ```
  
 2. Install dependencies:
@@ -30,13 +30,13 @@ npm install
 3. Build the Docker image:
 
 ```bash
-docker build -t guardia-projet3 .
+docker build -t My-Cloud-Guardia .
 ```
 
 4. Run the container:
 
 ```bash
-docker run -d -p 5000:5000 --name guardia guardia-projet3
+docker run -d -p 5000:5000 --name guardia My-Cloud-Guardia
 ```
 
 ## 📋 Configuration
