@@ -55,8 +55,6 @@ SSH_PASSWORD=your-password
 If using docker-compose, update the docker-compose.yml file to include your .env file:
 
 ```bash
-yaml
-Copier le code
 env_file:
   - .env
 ```
